@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinoy Flavors</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI}
+
+body{background:#f4f4f4}
+
+header{
+background:linear-gradient(135deg,#d32f2f,#ff9800);
+color:white;
+text-align:center;
+padding:40px 20px;
+}
+
+header h1{font-size:3rem}
+
+.container{width:90%;max-width:1200px;margin:auto;padding:40px 0}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.card img{width:100%;height:180px;object-fit:cover}
+
+.card-content{padding:15px}
+
+.btn{
+background:#d32f2f;
+color:white;
+border:none;
+padding:10px;
+width:100%;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* MODAL */
+.modal{
+display:none;
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,.7);
+overflow:auto;
+}
+
+.modal-content{
+background:white;
+width:90%;
+max-width:800px;
+margin:50px auto;
+padding:25px;
+border-radius:10px;
+position:relative;
+}
+
+.close{
+position:absolute;
+right:15px;top:10px;
+font-size:28px;
+cursor:pointer;
+}
+
+h2{color:#d32f2f}
+h3{color:#ff9800;margin-top:15px}
+
+.meta{
+font-size:14px;
+color:#555;
+margin:8px 0 15px;
+}
+
+ul,ol{margin-left:20px;margin-top:10px}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🍲 Pinoy Flavors</h1>
+<p>20 Filipino Cuisines</p>
+</header>
+
+<div class="container">
+<div class="grid" id="grid"></div>
+</div>
+
+<div class="modal" id="modal">
+<div class="modal-content">
+<span class="close" onclick="closeModal()">&times;</span>
+<div id="content"></div>
+</div>
+</div>
+
+<script>
+
+const recipes = [
+
+{
+name:"Chicken Adobo",
+img:"image/adobong manok.jpg",
+recipe:`
+<h2>Chicken Adobo</h2>
+<div class="meta">⏱ 1 hr | 🍽 4 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul>
+<li>1 kg chicken</li>
+<li>1/2 cup soy sauce</li>
+<li>1/2 cup vinegar</li>
+<li>garlic</li>
+<li>bay leaves</li>
+</ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Marinate chicken in soy sauce and garlic.</li>
+<li>Sauté garlic until golden.</li>
+<li>Add chicken and cook until brown.</li>
+<li>Add vinegar and simmer.</li>
+<li>Serve hot.</li>
+</ol>`
+},
+
+{
+name:"Sinigang na Baboy",
+img:"image/sinigang na baboy.jpg",
+recipe:`
+<h2>Sinigang na Baboy</h2>
+<div class="meta">⏱ 1.5 hrs | 🍽 5 servings | ⭐ Medium</div>
+
+<h3>Ingredients</h3>
+<ul>
+<li>Pork belly</li>
+<li>Tamarind mix</li>
+<li>Tomatoes</li>
+<li>Onion</li>
+<li>Radish</li>
+<li>Kangkong</li>
+</ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Boil pork until tender.</li>
+<li>Add onions and tomatoes.</li>
+<li>Add tamarind mix.</li>
+<li>Add vegetables last.</li>
+<li>Serve hot.</li>
+</ol>`
+},
+
+{
+name:"Lechon",
+img:"image/lechon.jpg",
+recipe:`
+<h2>Lechon</h2>
+<div class="meta">⏱ 6 hrs | 🍽 10 servings | ⭐ Hard</div>
+
+<h3>Ingredients</h3>
+<ul><li>Whole pig</li><li>Spices</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Season pig.</li>
+<li>Roast slowly over charcoal.</li>
+<li>Cook until crispy skin forms.</li>
+</ol>`
+},
+
+{
+name:"Kare-Kare",
+img:"image/kare-kare.jpg",
+recipe:`
+<h2>Kare-Kare</h2>
+<div class="meta">⏱ 2 hrs | 🍽 6 servings | ⭐ Medium</div>
+
+<h3>Ingredients</h3>
+<ul><li>Oxtail</li><li>Peanut butter</li><li>Vegetables</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Boil oxtail until tender.</li>
+<li>Add peanut sauce.</li>
+<li>Add vegetables.</li>
+<li>Simmer and serve.</li>
+</ol>`
+},
+
+{
+name:"Pancit Canton",
+img:"image/pancit canton.jpg",
+recipe:`
+<h2>Pancit Canton</h2>
+<div class="meta">⏱ 40 mins | 🍽 4 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Noodles</li><li>Vegetables</li><li>Soy sauce</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Stir fry garlic.</li>
+<li>Add meat and vegetables.</li>
+<li>Add noodles and sauce.</li>
+<li>Mix well and serve.</li>
+</ol>`
+},
+
+{
+name:"Bulalo",
+img:"image/bulalo.jpg",
+recipe:`
+<h2>Bulalo</h2>
+<div class="meta">⏱ 3 hrs | 🍽 5 servings | ⭐ Medium</div>
+
+<h3>Ingredients</h3>
+<ul><li>Beef shank</li><li>Corn</li><li>Vegetables</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Boil beef until tender.</li>
+<li>Add corn.</li>
+<li>Add vegetables.</li>
+<li>Season and serve hot.</li>
+</ol>`
+},
+
+{
+name:"Bistek Tagalog",
+img:"image/bistek tagalog.jpg",
+recipe:`
+<h2>Bistek Tagalog</h2>
+<div class="meta">⏱ 45 mins | 🍽 4 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Beef</li><li>Soy sauce</li><li>Calamansi</li><li>Onion</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Marinate beef.</li>
+<li>Pan fry beef.</li>
+<li>Add onions.</li>
+<li>Serve hot.</li>
+</ol>`
+},
+
+{
+name:"Tinola",
+img:"image/tinola.jpg",
+recipe:`
+<h2>Tinola</h2>
+<div class="meta">⏱ 1 hr | 🍽 4 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Chicken</li><li>Ginger</li><li>Papaya</li><li>Malunggay</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Sauté ginger.</li>
+<li>Add chicken.</li>
+<li>Add water and boil.</li>
+<li>Add papaya and leaves.</li>
+</ol>`
+},
+
+{
+name:"Laing",
+img:"image/laing.jpg",
+recipe:`
+<h2>Laing</h2>
+<div class="meta">⏱ 1 hr | 🍽 4 servings | ⭐ Medium</div>
+
+<h3>Ingredients</h3>
+<ul><li>Taro leaves</li><li>Coconut milk</li><li>Chili</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Cook coconut milk.</li>
+<li>Add taro leaves.</li>
+<li>Simmer slowly.</li>
+<li>Serve.</li>
+</ol>`
+},
+
+{
+name:"Dinuguan",
+img:"image/dinuguan.jpg",
+recipe:`
+<h2>Dinuguan</h2>
+<div class="meta">⏱ 1 hr | 🍽 4 servings | ⭐ Medium</div>
+
+<h3>Ingredients</h3>
+<ul><li>Pork</li><li>Pork blood</li><li>Vinegar</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Cook pork.</li>
+<li>Add vinegar.</li>
+<li>Add blood sauce.</li>
+<li>Simmer.</li>
+</ol>`
+},
+
+{
+name:"Sisig",
+img:"image/sisig.jpg",
+recipe:`
+<h2>Sisig</h2>
+<div class="meta">⏱ 1 hr | 🍽 3 servings | ⭐ Medium</div>
+
+<h3>Ingredients</h3>
+<ul><li>Pork face</li><li>Onion</li><li>Calamansi</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Grill pork.</li>
+<li>Chop finely.</li>
+<li>Season.</li>
+<li>Serve sizzling.</li>
+</ol>`
+},
+
+{
+name:"Lumpia Shanghai",
+img:"image/lumpiang shanghai.jpg",
+recipe:`
+<h2>Lumpia Shanghai</h2>
+<div class="meta">⏱ 1 hr | 🍽 5 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Ground pork</li><li>Wrapper</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Wrap meat.</li>
+<li>Roll tightly.</li>
+<li>Fry until golden.</li>
+</ol>`
+},
+
+{
+name:"Menudo",
+img:"image/menudo.jpg",
+recipe:`
+<h2>Menudo</h2>
+<div class="meta">⏱ 1 hr | 🍽 5 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Pork</li><li>Tomato sauce</li><li>Potatoes</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Cook pork.</li>
+<li>Add sauce.</li>
+<li>Add vegetables.</li>
+<li>Simmer.</li>
+</ol>`
+},
+
+{
+name:"Afritada",
+img:"image/afritada.jpg",
+recipe:`
+<h2>Afritada</h2>
+<div class="meta">⏱ 1 hr | 🍽 5 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Chicken</li><li>Tomato sauce</li><li>Vegetables</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Cook chicken.</li>
+<li>Add sauce.</li>
+<li>Add vegetables.</li>
+<li>Simmer.</li>
+</ol>`
+},
+
+{
+name:"Kaldereta",
+img:"image/kaldereta.jpg",
+recipe:`
+<h2>Kaldereta</h2>
+<div class="meta">⏱ 2 hrs | 🍽 6 servings | ⭐ Medium</div>
+
+<h3>Ingredients</h3>
+<ul><li>Beef</li><li>Tomato sauce</li><li>Liver spread</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Cook beef.</li>
+<li>Add sauce.</li>
+<li>Simmer.</li>
+<li>Serve.</li>
+</ol>`
+},
+
+{
+name:"Pinakbet",
+img:"image/pinakbet.jpg",
+recipe:`
+<h2>Pinakbet</h2>
+<div class="meta">⏱ 45 mins | 🍽 4 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Vegetables</li><li>Shrimp paste</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Cook vegetables.</li>
+<li>Add shrimp paste.</li>
+<li>Mix and simmer.</li>
+</ol>`
+},
+
+{
+name:"Chicken Inasal",
+img:"image/chicken inasal.jpg",
+recipe:`
+<h2>Chicken Inasal</h2>
+<div class="meta">⏱ 1 hr | 🍽 4 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Chicken</li><li>Vinegar</li><li>Garlic</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Marinate chicken.</li>
+<li>Grill.</li>
+<li>Baste while cooking.</li>
+</ol>`
+},
+
+{
+name:"Puto",
+img:"image/puto.jpg",
+recipe:`
+<h2>Puto</h2>
+<div class="meta">⏱ 40 mins | 🍽 6 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Rice flour</li><li>Sugar</li><li>Milk</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Mix batter.</li>
+<li>Steam.</li>
+<li>Cool and serve.</li>
+</ol>`
+},
+
+{
+name:"Bibingka",
+img:"image/bibingka.jpg",
+recipe:`
+<h2>Bibingka</h2>
+<div class="meta">⏱ 1 hr | 🍽 6 servings | ⭐ Medium</div>
+
+<h3>Ingredients</h3>
+<ul><li>Rice flour</li><li>Egg</li><li>Cheese</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Mix batter.</li>
+<li>Bake.</li>
+<li>Add toppings.</li>
+</ol>`
+},
+
+{
+name:"Halo-Halo",
+img:"image/halo-halo.jpg",
+recipe:`
+<h2>Halo-Halo</h2>
+<div class="meta">⏱ 20 mins | 🍽 2 servings | ⭐ Easy</div>
+
+<h3>Ingredients</h3>
+<ul><li>Ice</li><li>Milk</li><li>Sweets</li></ul>
+
+<h3>Instructions</h3>
+<ol>
+<li>Prepare ingredients.</li>
+<li>Mix in glass.</li>
+<li>Add milk and ice.</li>
+</ol>`
+}
+
+];
+
+const grid=document.getElementById("grid");
+
+grid.innerHTML=recipes.map((r,i)=>`
+<div class="card">
+<img src="${r.img}">
+<div class="card-content">
+<h3>${r.name}</h3>
+<button class="btn" onclick="openRecipe(${i})">View Recipe</button>
+</div>
+</div>
+`).join("");
+
+function openRecipe(i){
+document.getElementById("content").innerHTML=recipes[i].recipe;
+document.getElementById("modal").style.display="block";
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+
+window.onclick=function(e){
+if(e.target.id==="modal") closeModal();
+}
+
+</script>
+
+</body>
+</html>
