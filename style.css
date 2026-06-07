@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f8f5f0;
+    color: #333;
+}
+
+header {
+    background: #8b0000;
+    color: white;
+    text-align: center;
+    padding: 30px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+}
+
+nav {
+    background: #d2691e;
+    text-align: center;
+    padding: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 20px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: yellow;
+}
+
+.hero {
+    text-align: center;
+    padding: 50px 20px;
+    background: url('https://images.unsplash.com/photo-1544025162-d76694265947') center/cover;
+    color: white;
+}
+
+.hero h2 {
+    font-size: 2rem;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 30px;
+    gap: 20px;
+}
+
+.recipe-card {
+    background: white;
+    width: 350px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.recipe-card h2 {
+    color: #8b0000;
+    margin-bottom: 10px;
+}
+
+.recipe-card h3 {
+    margin-top: 15px;
+    color: #d2691e;
+}
+
+.recipe-card ul,
+.recipe-card ol {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+footer {
+    text-align: center;
+    background: #8b0000;
+    color: white;
+    padding: 15px;
+    margin-top: 30px;
+}
